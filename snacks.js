@@ -5,7 +5,13 @@ async function fetchObj(url) {
 }
 
 async function getChefBirthday(id) {
-    const recipe = await fetchObj(`https://dummyjson.com/recipes/${id}`)
+    let recipe;
+    try {
+        recipe = await fetchObj(`https://dummyjson.com/recipes/${id}`)
+    }
+    catch (error) {
+        throw new Error(`C'è stato un problema nel recuperare la ricetta: ${error}`)
+    }
     const userId = await recipe.userId;
     const chefInfo = await fetchObj(`https://dummyjson.com/users/${userId}`)
     const ChefDate = chefInfo.birthDate
@@ -13,6 +19,11 @@ async function getChefBirthday(id) {
 }
 
 (async () => {
-    const ChefDate = await getChefBirthday(1)
-    console.log(`La data di nascita è : ${ChefDate}`)
+    try {
+        const ChefDate = await getChefBirthday(1)
+        console.log(`La data di nascita è : ${ChefDate}`)
+    }
+    catch (error) {
+        console.error(error)
+    }
 })();
